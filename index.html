@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Retirement Familiarity Assessment</title>
+<style>
+:root{
+  --bg:#071021;
+  --panel:#0f1724;
+  --muted:#9aa4b2;
+  --accent:#4ea8ff;
+  --good:#2ecc71;
+  --warn:#f1c40f;
+  --bad:#ff6b6b;
+  --card:#132033;
+  --soft:#1a2740;
+  font-family: Inter, system-ui, Arial, sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,var(--bg),#04101a);
+  color:#e6eef8;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:20px;
+}
+.container{
+  width:95%;
+  max-width:1150px;
+  background:var(--panel);
+  border-radius:18px;
+  display:grid;
+  grid-template-columns:320px 1fr;
+  overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,0.28);
+}
+.panel-left{
+  padding:26px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  background:linear-gradient(180deg,#0c1626,#09111d);
+}
+.logo{
+  width:60px;height:60px;border-radius:16px;
+  background:linear-gradient(135deg,var(--accent),#77c3ff);
+  display:flex;align-items:center;justify-content:center;
+  color:#071021;font-weight:800;font-size:20px
+}
+.subtitle{color:var(--muted);font-size:13px}
+.desc{
+  background:rgba(255,255,255,0.03);
+  padding:14px;
+  border-radius:14px;
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.6;
+}
+.tip-box{
+  background:rgba(78,168,255,0.08);
+  border:1px solid rgba(78,168,255,0.18);
+  padding:14px;
+  border-radius:14px;
+  font-size:13px;
+  color:#d7e9ff;
+  line-height:1.5;
+}
+.mini-stats{
+  display:grid;
+  gap:10px;
+}
+.mini-card{
+  background:rgba(255,255,255,0.03);
+  padding:12px;
+  border-radius:12px;
+  font-size:13px;
+}
+.mini-card strong{
+  display:block;
+  font-size:15px;
+  margin-bottom:4px;
+}
+.panel-right{
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:16px
+}
+.header-row{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px
+}
+.progress-wrap{width:100%}
+.progress-label{font-size:13px;color:var(--muted)}
+.progress{
+  height:10px;
+  background:rgba(255,255,255,0.04);
+  border-radius:999px;
+  overflow:hidden;
+  width:100%;
+  margin-top:4px;
+}
+.progress > i{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),#77c3ff);
+  width:0%;
+  transition:width .35s ease
+}
+.card{
+  background:rgba(255,255,255,0.02);
+  border-radius:16px;
+  padding:24px;
+  min-height:540px;
+}
+.category-pill{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:999px;
+  background:rgba(78,168,255,0.12);
+  color:#9ed2ff;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:14px;
+  letter-spacing:.2px;
+}
+.question-text{
+  font-size:24px;
+  margin-bottom:18px;
+  font-weight:700;
+  line-height:1.35;
+}
+.options{
+  display:flex;
+  flex-direction:column;
+  gap:12px
+}
+.option{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.05);
+  padding:15px 16px;
+  border-radius:14px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  transition:.2s ease;
+}
+.option:hover{
+  transform:translateY(-2px);
+  border-color:rgba(78,168,255,0.24);
+}
+.option .bullet{
+  min-width:38px;min-height:38px;border-radius:10px;
+  background:rgba(255,255,255,0.04);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:var(--muted)
+}
+.option.selected{
+  background:linear-gradient(90deg, rgba(78,168,255,0.10), rgba(119,195,255,0.03));
+  border:1px solid rgba(78,168,255,0.28)
+}
+.slider-wrap, .number-wrap{
+  margin-top:10px;
+  background:rgba(255,255,255,0.02);
+  border-radius:14px;
+  padding:18px;
+}
+.slider-value{
+  font-size:30px;
+  font-weight:800;
+  margin-top:12px;
+  color:#8cc8ff;
+}
+.slider-labels{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:13px;
+  margin-top:10px;
+}
+input[type="range"]{
+  width:100%;
+  margin-top:16px;
+}
+input[type="number"]{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+  background:#0a1420;
+  color:white;
+  font-size:16px;
+  outline:none;
+}
+.footer-row{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:12px;
+  margin-top:12px
+}
+.btn{
+  background:var(--accent);
+  color:#071021;
+  padding:11px 18px;
+  border-radius:12px;
+  border:0;
+  font-weight:700;
+  cursor:pointer;
+}
+.btn.disabled{
+  opacity:0.5;
+  cursor:not-allowed
+}
+.btn.secondary{
+  background:transparent;
+  color:var(--accent);
+  border:1px solid rgba(78,168,255,0.18)
+}
+.result-wrap{text-align:center;margin-top:10px}
+.score-badge{
+  width:150px;height:150px;border-radius:999px;
+  display:inline-grid;place-items:center;
+  font-size:34px;font-weight:800;color:#071021;
+  margin-bottom:12px;
+}
+.result-sub{
+  color:var(--muted);
+  font-size:15px;
+  margin-bottom:20px;
+  line-height:1.5;
+}
+.breakdown{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:12px;
+  margin-top:24px;
+  text-align:left;
+}
+.break-card{
+  background:var(--card);
+  border-radius:14px;
+  padding:15px;
+}
+.break-card h4{
+  margin:0 0 8px 0;
+  font-size:15px;
+}
+.feedback-list{
+  text-align:left;
+  margin-top:24px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.feedback-item{
+  background:rgba(255,255,255,0.03);
+  border-left:4px solid var(--accent);
+  padding:14px;
+  border-radius:12px;
+  line-height:1.55;
+}
+/* RESOURCES SECTION */
+.resources-section{
+  margin-top:28px;
+  text-align:left;
+}
+.resources-section h3{
+  font-size:16px;
+  font-weight:700;
+  color:#9ed2ff;
+  margin:0 0 14px 0;
+  letter-spacing:.3px;
+}
+.resources-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:12px;
+}
+.resource-card{
+  background:rgba(78,168,255,0.06);
+  border:1px solid rgba(78,168,255,0.16);
+  border-radius:14px;
+  padding:14px 16px;
+  text-decoration:none;
+  color:#d7e9ff;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  transition:.2s ease;
+}
+.resource-card:hover{
+  background:rgba(78,168,255,0.12);
+  border-color:rgba(78,168,255,0.30);
+  transform:translateY(-2px);
+}
+.resource-card .res-title{
+  font-size:14px;
+  font-weight:700;
+  color:#8cc8ff;
+}
+.resource-card .res-desc{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.4;
+}
+.small{
+  color:var(--muted);
+  font-size:13px;
+}
+.hidden{display:none}
+@media(max-width:900px){
+  .container{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- LEFT -->
+  <div class="panel-left">
+    <div class="logo">RA</div>
+    <h2>Retirement Familiarity Assessment</h2>
+    <div class="subtitle">Interactive financial awareness quiz</div>
+    <div class="desc">
+      This assessment is designed to measure how familiar you are with
+      <strong>retirement planning, long-term financial thinking, saving habits,
+      and future financial decision-making</strong>.
+      <br><br>
+      It is not about whether you are "ready to retire" right now. It is about how much
+      you understand the ideas that shape retirement preparedness over time.
+    </div>
+    <div class="tip-box">
+      <strong>Big ideas behind retirement planning:</strong><br>
+      Start early &bull; Pay yourself first &bull; Know your options &bull; Build habits &bull; Have a plan
+    </div>
+    <div class="mini-stats">
+      <div class="mini-card">
+        <strong>What this covers</strong>
+        Savings, retirement accounts, planning habits, financial awareness, and future lifestyle thinking
+      </div>
+      <div class="mini-card">
+        <strong>At the end</strong>
+        You'll get a score, category breakdown, and feedback based on your responses
+      </div>
+    </div>
+  </div>
+  <!-- RIGHT -->
+  <div class="panel-right">
+    <div class="header-row">
+      <div class="progress-wrap">
+        <div class="progress-label">Question <span id="qIndex">1</span> of <span id="qTotal"></span></div>
+        <div class="progress"><i id="progressBar"></i></div>
+      </div>
+    </div>
+    <div class="card">
+      <div id="questionArea">
+        <div class="category-pill" id="categoryPill">Category</div>
+        <div class="question-text" id="qText"></div>
+        <div id="inputArea"></div>
+      </div>
+      <div id="resultArea" class="hidden">
+        <div class="result-wrap">
+          <div id="scoreBadge" class="score-badge">0%</div>
+          <p id="resultMsg"></p>
+          <div class="result-sub" id="percentileText"></div>
+        </div>
+        <div class="breakdown" id="breakdown"></div>
+        <div class="feedback-list" id="feedbackList"></div>
+        <!-- RESOURCES -->
+        <div class="resources-section">
+          <h3>&#128279; Learn More</h3>
+          <div class="resources-grid">
+            <a class="resource-card" href="https://www.ssa.gov/benefits/retirement/" target="_blank">
+              <span class="res-title">Social Security Administration</span>
+              <span class="res-desc">Official guide to Social Security retirement benefits and when to claim</span>
+            </a>
+            <a class="resource-card" href="https://www.fool.com/retirement/" target="_blank">
+              <span class="res-title">The Motley Fool &mdash; Retirement</span>
+              <span class="res-desc">Beginner-friendly articles on investing, saving, and building wealth over time</span>
+            </a>
+            <a class="resource-card" href="https://www.investopedia.com/terms/1/401kplan.asp" target="_blank">
+              <span class="res-title">What Is a 401(k)?</span>
+              <span class="res-desc">Clear explainer on how employer retirement accounts work and why they matter</span>
+            </a>
+            <a class="resource-card" href="https://www.investopedia.com/terms/r/rothira.asp" target="_blank">
+              <span class="res-title">What Is a Roth IRA?</span>
+              <span class="res-desc">How Roth IRAs work, who can open one, and why they're popular for younger savers</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-row">
+      <button class="btn disabled" id="backBtn">Back</button>
+      <button class="btn" id="nextBtn">Next</button>
+      <button class="btn secondary" id="restartBtn">Restart</button>
+    </div>
+  </div>
+</div>
+<script>
+const QUESTIONS = [
+  // FUTURE THINKING / AWARENESS
+  {
+    type: "slider",
+    category: "future",
+    text: "How often do you think about your financial future?",
+    min: 0,
+    max: 10,
+    step: 1,
+    labels: ["Rarely", "Very often"]
+  },
+  {
+    type: "mcq",
+    category: "future",
+    text: "Have you ever thought about what you want life to look like when you stop working?",
+    options: [
+      { id:"A", text:"Yes, I've thought about it pretty clearly", points:3 },
+      { id:"B", text:"A little, but not in much detail", points:2 },
+      { id:"C", text:"Only briefly here and there", points:1 },
+      { id:"D", text:"Not really", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "future",
+    text: "Do you believe retirement is something people need to actively plan for?",
+    options: [
+      { id:"A", text:"Definitely, it usually takes long-term planning", points:3 },
+      { id:"B", text:"Probably, but I haven't thought much about why", points:2 },
+      { id:"C", text:"Maybe, depending on the person", points:1 },
+      { id:"D", text:"Not really", points:0 }
+    ]
+  },
+  {
+    type: "slider",
+    category: "future",
+    // UPDATED: clarified timing
+    text: "How confident are you that you'll be financially prepared for retirement when you want to retire?",
+    min: 0,
+    max: 10,
+    step: 1,
+    labels: ["Not confident", "Very confident"]
+  },
+  // SAVING HABITS
+  {
+    type: "mcq",
+    category: "saving",
+    text: "Do you regularly save money for your future?",
+    options: [
+      { id:"A", text:"Yes, consistently", points:3 },
+      { id:"B", text:"Sometimes, when I can", points:2 },
+      { id:"C", text:"Rarely", points:1 },
+      { id:"D", text:"Not really", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "saving",
+    text: "When you receive money, what do you usually do with most of it?",
+    options: [
+      { id:"A", text:"Save or set aside part of it first", points:3 },
+      { id:"B", text:"Split it between spending and saving", points:2 },
+      { id:"C", text:"Usually spend most of it", points:1 },
+      { id:"D", text:"I don't really think about where it goes", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "saving",
+    text: "When people say 'pay yourself first,' what do you think they usually mean?",
+    options: [
+      { id:"A", text:"Set aside money for savings before spending on extras", points:3 },
+      { id:"B", text:"Make sure your bills are covered before anything else", points:2 },
+      { id:"C", text:"Spend money on yourself before helping others", points:1 },
+      { id:"D", text:"I'm not really sure", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "saving",
+    text: "Do you think your current financial habits support your long-term goals?",
+    options: [
+      { id:"A", text:"Yes, for the most part", points:3 },
+      { id:"B", text:"Somewhat, but there's room to improve", points:2 },
+      { id:"C", text:"Probably not much", points:1 },
+      { id:"D", text:"I honestly don't know", points:0 }
+    ]
+  },
+  // KNOWLEDGE / UNDERSTANDING
+  {
+    type: "mcq",
+    category: "knowledge",
+    text: "How familiar are you with a 401(k)?",
+    options: [
+      { id:"A", text:"I could explain the basics to someone else", points:3 },
+      { id:"B", text:"I know generally what it is", points:2 },
+      { id:"C", text:"I've heard of it but not much more", points:1 },
+      { id:"D", text:"I don't really know what it is", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "knowledge",
+    // REWORDED: clearer, more direct
+    text: "If someone mentioned a Roth IRA, would you know what they're talking about?",
+    options: [
+      { id:"A", text:"Yes — I could explain what it is and how it works", points:3 },
+      { id:"B", text:"Mostly — I know the general idea", points:2 },
+      { id:"C", text:"A little — I've heard of it but not much more", points:1 },
+      { id:"D", text:"Not really — I don't know what that is", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "knowledge",
+    text: "Which statement best describes what you know about Social Security?",
+    options: [
+      { id:"A", text:"I understand what it is, who it helps, and its limitations", points:3 },
+      // CLARIFIED: B and C now clearly distinct
+      { id:"B", text:"I know it's a government program that helps retirees, but I'm fuzzy on the details", points:2 },
+      { id:"C", text:"I've heard the name but couldn't explain what it actually does", points:1 },
+      { id:"D", text:"I barely know what it is", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "knowledge",
+    text: "If two people save the same amount each month, who usually ends up with more by retirement?",
+    options: [
+      { id:"A", text:"The person who started earlier", points:3 },
+      { id:"B", text:"Usually whoever makes more money", points:2 },
+      { id:"C", text:"It would probably be about the same", points:1 },
+      { id:"D", text:"There's no real way to tell", points:0 }
+    ]
+  },
+  {
+    type: "slider",
+    category: "knowledge",
+    text: "To what extent do you understand how retirement savings grow over time?",
+    min: 0,
+    max: 10,
+    step: 1,
+    labels: ["Very little", "Very well"]
+  },
+  // NEW: Retirement amount awareness
+  {
+    type: "mcq",
+    category: "knowledge",
+    text: "How much money do you think it takes to retire comfortably?",
+    options: [
+      { id:"A", text:"$1 million or more for most people", points:3 },
+      { id:"B", text:"Around $500,000", points:2 },
+      { id:"C", text:"Less than $300,000", points:1 },
+      { id:"D", text:"I have no idea", points:0 }
+    ]
+  },
+  // NEW: Debt awareness
+  {
+    type: "mcq",
+    category: "knowledge",
+    text: "Do you understand how debt can affect your long-term financial future?",
+    options: [
+      { id:"A", text:"Yes — I know debt can slow savings and increase costs over time", points:3 },
+      { id:"B", text:"Somewhat — I know debt is something to be careful about", points:2 },
+      { id:"C", text:"A little, but I haven't thought much about it", points:1 },
+      { id:"D", text:"Not really", points:0 }
+    ]
+  },
+  // PLANNING / ACTION
+  {
+    type: "mcq",
+    category: "planning",
+    text: "Have you taken any steps toward preparing for retirement, even small ones?",
+    // UPDATED: clearer, less overlapping options
+    options: [
+      { id:"A", text:"Yes, I've started consistently", points:3 },
+      { id:"B", text:"A little, but not consistently", points:2 },
+      { id:"C", text:"Only thought about it, no real action", points:1 },
+      { id:"D", text:"Not yet", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "planning",
+    // UPDATED: "money plan" → "financial plan"
+    text: "How close are you to having an actual long-term financial plan?",
+    options: [
+      { id:"A", text:"I already have one or know exactly what I'd do", points:3 },
+      { id:"B", text:"I've thought about it and have a rough idea", points:2 },
+      { id:"C", text:"I haven't planned much yet", points:1 },
+      { id:"D", text:"I've never really thought about it", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "planning",
+    text: "Have you ever talked to a parent, teacher, mentor, or financial professional about retirement planning?",
+    options: [
+      { id:"A", text:"Yes, more than once", points:3 },
+      { id:"B", text:"Yes, at least once", points:2 },
+      { id:"C", text:"Maybe briefly", points:1 },
+      { id:"D", text:"No", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "planning",
+    text: "If someone asked you what your retirement plan is today, could you answer clearly?",
+    options: [
+      { id:"A", text:"Yes, pretty clearly", points:3 },
+      { id:"B", text:"Somewhat", points:2 },
+      { id:"C", text:"Not really", points:1 },
+      { id:"D", text:"No, not at all", points:0 }
+    ]
+  },
+  // LIFESTYLE / LONG-TERM READINESS
+  {
+    type: "mcq",
+    category: "lifestyle",
+    text: "Have you thought about what kind of lifestyle you'd want later in life?",
+    options: [
+      { id:"A", text:"Yes, in a fairly realistic way", points:3 },
+      { id:"B", text:"Somewhat", points:2 },
+      { id:"C", text:"Only a little", points:1 },
+      { id:"D", text:"Not really", points:0 }
+    ]
+  },
+  {
+    type: "mcq",
+    category: "lifestyle",
+    text: "Have you considered how things like housing, healthcare, or daily expenses could affect retirement?",
+    options: [
+      { id:"A", text:"Yes, those costs definitely matter", points:3 },
+      { id:"B", text:"A little", points:2 },
+      { id:"C", text:"Not much", points:1 },
+      { id:"D", text:"Not at all", points:0 }
+    ]
+  },
+  {
+    type: "number",
+    category: "lifestyle",
+    text: "At what age do you think people usually retire?",
+    placeholder: "Enter an age (ex: 65)"
+  },
+  {
+    type: "slider",
+    category: "lifestyle",
+    text: "How much do you think future education or career choices affect retirement planning?",
+    min: 0,
+    max: 10,
+    step: 1,
+    labels: ["Not much", "A lot"]
+  }
+];
+
+// Index map (for clarity in feedback)
+// 0  - future slider (how often think about financial future)
+// 1  - future (what life looks like when stop working)
+// 2  - future (need to actively plan?)
+// 3  - future slider (confident about retirement timing)
+// 4  - saving (regularly save?)
+// 5  - saving (what do you do with money?)
+// 6  - saving (pay yourself first?)
+// 7  - saving (habits support goals?)
+// 8  - knowledge (401k)
+// 9  - knowledge (Roth IRA)
+// 10 - knowledge (Social Security)
+// 11 - knowledge (who saves more?)
+// 12 - knowledge slider (understand how savings grow?)
+// 13 - knowledge NEW (how much to retire?)
+// 14 - knowledge NEW (debt awareness)
+// 15 - planning (steps taken)
+// 16 - planning (financial plan)
+// 17 - planning (talked to someone)
+// 18 - planning (could you answer clearly?)
+// 19 - lifestyle (what lifestyle do you want?)
+// 20 - lifestyle (housing/healthcare consideration)
+// 21 - lifestyle number (what age retire?)
+// 22 - lifestyle slider (education/career affects retirement?)
+
+let currentIndex = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+const qText = document.getElementById("qText");
+const inputArea = document.getElementById("inputArea");
+const nextBtn = document.getElementById("nextBtn");
+const backBtn = document.getElementById("backBtn");
+const restartBtn = document.getElementById("restartBtn");
+const qIndex = document.getElementById("qIndex");
+const qTotal = document.getElementById("qTotal");
+const progressBar = document.getElementById("progressBar");
+const resultArea = document.getElementById("resultArea");
+const questionArea = document.getElementById("questionArea");
+const scoreBadge = document.getElementById("scoreBadge");
+const resultMsg = document.getElementById("resultMsg");
+const percentileText = document.getElementById("percentileText");
+const breakdown = document.getElementById("breakdown");
+const feedbackList = document.getElementById("feedbackList");
+const categoryPill = document.getElementById("categoryPill");
+qTotal.textContent = QUESTIONS.length;
+const categoryNames = {
+  future: "Future Thinking / Awareness",
+  saving: "Saving Habits",
+  knowledge: "Financial Understanding",
+  planning: "Planning / Action",
+  lifestyle: "Lifestyle / Long-Term Readiness"
+};
+function updateBackButton() {
+  if (currentIndex === 0) backBtn.classList.add("disabled");
+  else backBtn.classList.remove("disabled");
+}
+function render() {
+  const q = QUESTIONS[currentIndex];
+  qText.textContent = q.text;
+  qIndex.textContent = currentIndex + 1;
+  categoryPill.textContent = categoryNames[q.category] || q.category;
+  inputArea.innerHTML = "";
+  if (q.type === "mcq") {
+    const optionsDiv = document.createElement("div");
+    optionsDiv.className = "options";
+    q.options.forEach(opt => {
+      const div = document.createElement("div");
+      div.className = "option";
+      div.innerHTML = `<div class="bullet">${opt.id}</div>${opt.text}`;
+      if (answers[currentIndex] === opt.points) div.classList.add("selected");
+      div.onclick = () => {
+        document.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+        div.classList.add("selected");
+        answers[currentIndex] = opt.points;
+      };
+      optionsDiv.appendChild(div);
+    });
+    inputArea.appendChild(optionsDiv);
+  }
+  if (q.type === "slider") {
+    const wrap = document.createElement("div");
+    wrap.className = "slider-wrap";
+    const value = answers[currentIndex] !== null ? answers[currentIndex] : 5;
+    wrap.innerHTML = `
+      <div class="small">Move the slider based on your answer</div>
+      <input type="range" min="${q.min}" max="${q.max}" step="${q.step}" value="${value}" id="sliderInput">
+      <div class="slider-value" id="sliderValue">${value}/10</div>
+      <div class="slider-labels">
+        <span>${q.labels[0]}</span>
+        <span>${q.labels[1]}</span>
+      </div>
+    `;
+    inputArea.appendChild(wrap);
+    const slider = document.getElementById("sliderInput");
+    const sliderValue = document.getElementById("sliderValue");
+    slider.oninput = () => {
+      sliderValue.textContent = slider.value + "/10";
+      answers[currentIndex] = Number(slider.value);
+    };
+    if (answers[currentIndex] === null) answers[currentIndex] = value;
+  }
+  if (q.type === "number") {
+    const wrap = document.createElement("div");
+    wrap.className = "number-wrap";
+    wrap.innerHTML = `
+      <div class="small">Your estimate</div>
+      <input type="number" id="numberInput" placeholder="${q.placeholder}" value="${answers[currentIndex] ?? ""}">
+    `;
+    inputArea.appendChild(wrap);
+    const numberInput = document.getElementById("numberInput");
+    numberInput.oninput = () => {
+      answers[currentIndex] = numberInput.value === "" ? null : Number(numberInput.value);
+    };
+  }
+  progressBar.style.width = (currentIndex / QUESTIONS.length * 100) + "%";
+  updateBackButton();
+}
+function getQuestionPoints(question, answer) {
+  if (answer === null) return 0;
+  if (question.type === "mcq") return answer;
+  if (question.type === "slider") {
+    if (answer >= 8) return 3;
+    if (answer >= 5) return 2;
+    if (answer >= 2) return 1;
+    return 0;
+  }
+  if (question.type === "number") {
+    if (answer >= 60 && answer <= 67) return 3;
+    if (answer >= 55 && answer <= 70) return 2;
+    if (answer >= 45 && answer <= 80) return 1;
+    return 0;
+  }
+  return 0;
+}
+nextBtn.onclick = () => {
+  if (answers[currentIndex] === null || answers[currentIndex] === "") {
+    alert("Pick or enter an answer");
+    return;
+  }
+  currentIndex++;
+  if (currentIndex < QUESTIONS.length) {
+    render();
+  } else {
+    showResults();
+  }
+};
+backBtn.onclick = () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    render();
+  }
+};
+function showResults() {
+  const scoredAnswers = QUESTIONS.map((q, i) => ({
+    category: q.category,
+    points: getQuestionPoints(q, answers[i]),
+    raw: answers[i],
+    type: q.type,
+    text: q.text
+  }));
+  const total = scoredAnswers.reduce((a, b) => a + b.points, 0);
+  const max = QUESTIONS.length * 3;
+  const percent = Math.round((total / max) * 100);
+  const categoryTotals = {};
+  const categoryCounts = {};
+  scoredAnswers.forEach(item => {
+    if (!categoryTotals[item.category]) {
+      categoryTotals[item.category] = 0;
+      categoryCounts[item.category] = 0;
+    }
+    categoryTotals[item.category] += item.points;
+    categoryCounts[item.category] += 3;
+  });
+  questionArea.style.display = "none";
+  resultArea.classList.remove("hidden");
+  scoreBadge.textContent = percent + "%";
+  if (percent >= 85) {
+    scoreBadge.style.background = "var(--good)";
+    resultMsg.textContent = "Strong retirement familiarity";
+  } else if (percent >= 70) {
+    scoreBadge.style.background = "var(--good)";
+    resultMsg.textContent = "Good understanding with room to grow";
+  } else if (percent >= 50) {
+    scoreBadge.style.background = "var(--warn)";
+    resultMsg.textContent = "Moderate retirement familiarity";
+  } else {
+    scoreBadge.style.background = "var(--bad)";
+    resultMsg.textContent = "Early-stage retirement familiarity";
+  }
+  percentileText.textContent =
+    "This score reflects your current familiarity with retirement planning concepts, long-term money habits, and future financial awareness.";
+  // Breakdown
+  breakdown.innerHTML = "";
+  Object.keys(categoryTotals).forEach(cat => {
+    const catPercent = Math.round((categoryTotals[cat] / categoryCounts[cat]) * 100);
+    const div = document.createElement("div");
+    div.className = "break-card";
+    div.innerHTML = `
+      <h4>${categoryNames[cat] || cat}</h4>
+      <div style="font-size:28px;font-weight:800">${catPercent}%</div>
+      <div class="small">Familiarity in this area</div>
+    `;
+    breakdown.appendChild(div);
+  });
+  // FEEDBACK — indices updated for 2 new questions at 13 and 14
+  feedbackList.innerHTML = "";
+  const exactFeedback = [];
+
+  // Future Thinking
+  if (answers[0] <= 3 || answers[1] <= 1 || answers[2] <= 1) {
+    exactFeedback.push("Your results suggest that <strong>future thinking and retirement awareness</strong> could be stronger. A good first step is simply thinking more often about what kind of financial future you want and what it might take to get there.");
+  }
+  if (answers[3] <= 3) {
+    exactFeedback.push("Your confidence about being financially prepared when you want to retire seems low or uncertain. That is actually common, but it usually improves when people learn more about saving, retirement tools, and long-term planning.");
+  }
+  // Saving
+  if (answers[4] <= 1 || answers[5] <= 1) {
+    exactFeedback.push("Your answers suggest that <strong>saving habits</strong> may still be developing. Even small habits like setting aside part of what you receive can make a major difference over time.");
+  }
+  if (answers[6] <= 1) {
+    exactFeedback.push("It may help to better understand the phrase <strong>'pay yourself first'</strong>. It usually means saving or investing money before spending it on non-essential things.");
+  }
+  if (answers[7] <= 1) {
+    exactFeedback.push("Your current money habits may not fully support long-term goals yet. Building consistency matters more than being perfect, especially when it comes to saving early.");
+  }
+  // Knowledge
+  if (answers[8] <= 1) {
+    exactFeedback.push("You may want to learn the basics of a <strong>401(k)</strong>, including how it works through employers and why many people use it to save for retirement. The link below is a great starting point.");
+  }
+  if (answers[9] <= 1) {
+    exactFeedback.push("A <strong>Roth IRA</strong> is worth learning about because it is a common retirement savings tool that many people can open independently. Check out the resource link below for a clear overview.");
+  }
+  if (answers[10] <= 1) {
+    exactFeedback.push("It would help to better understand <strong>Social Security</strong>, especially what it is meant to provide and why many people still need additional savings beyond it. The SSA.gov link below explains it well.");
+  }
+  if (answers[11] <= 1 || answers[12] <= 3) {
+    exactFeedback.push("One of the most important retirement ideas is that <strong>starting earlier usually matters more than starting bigger</strong>, because savings have more time to grow through compound interest.");
+  }
+  // NEW: Retirement amount
+  if (answers[13] <= 1) {
+    exactFeedback.push("Most financial planners suggest that a <strong>comfortable retirement requires $1 million or more</strong> for many people, depending on lifestyle and expenses. Understanding that target early helps you plan with it in mind.");
+  }
+  // NEW: Debt awareness
+  if (answers[14] <= 1) {
+    exactFeedback.push("<strong>Debt can be a major obstacle</strong> to building retirement savings. High-interest debt, like credit cards, costs money every month that could otherwise go toward long-term savings. Understanding this connection early is a real advantage.");
+  }
+  // Planning — indices shifted by 2
+  if (answers[15] <= 1 || answers[16] <= 1 || answers[18] <= 1) {
+    exactFeedback.push("Your results show that <strong>retirement planning actions</strong> may still be pretty early. That is normal, but even a rough financial plan is stronger than having no plan at all.");
+  }
+  if (answers[17] <= 1) {
+    exactFeedback.push("Talking with a parent, teacher, mentor, or financial professional can make retirement concepts feel much more real and easier to understand.");
+  }
+  // Lifestyle — indices shifted by 2
+  if (answers[19] <= 1 || answers[20] <= 1) {
+    exactFeedback.push("Retirement is not only about money. It also depends on what kind of <strong>lifestyle</strong> you want and how much things like housing, healthcare, and daily expenses may cost later on.");
+  }
+  if (answers[21] !== null && (answers[21] < 55 || answers[21] > 70)) {
+    exactFeedback.push("Your expected retirement age estimate was a little outside the most common range. Learning more about realistic retirement timelines can help make planning feel more concrete.");
+  }
+  if (answers[22] <= 3) {
+    exactFeedback.push("Your future education and career path can affect income, debt, benefits, and retirement opportunities more than most people realize. Career choices and retirement planning are more connected than they seem.");
+  }
+  if (exactFeedback.length === 0) {
+    exactFeedback.push("You showed strong overall familiarity with retirement-related concepts. A good next step would be learning more about investing, inflation, compound growth, and how real retirement plans are built over time.");
+  }
+  // Universal closing feedback
+  exactFeedback.push("The biggest long-term advantage in retirement planning is usually not being rich early. It is <strong>starting early, building habits, and understanding your options</strong> before most people do.");
+  exactFeedback.forEach(text => {
+    const div = document.createElement("div");
+    div.className = "feedback-item";
+    div.innerHTML = text;
+    feedbackList.appendChild(div);
+  });
+  progressBar.style.width = "100%";
+  nextBtn.style.display = "none";
+  backBtn.classList.add("disabled");
+}
+restartBtn.onclick = () => {
+  currentIndex = 0;
+  answers = new Array(QUESTIONS.length).fill(null);
+  questionArea.style.display = "block";
+  resultArea.classList.add("hidden");
+  nextBtn.style.display = "block";
+  render();
+};
+render();
+</script>
+</body>
+</html>
